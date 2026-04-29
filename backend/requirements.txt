@@ -1,0 +1,8 @@
+fastapi[all]
+crewai[tools]
+pydantic-settings
+sqlalchemy[asyncio]
+aiosqlite
+python-dotenv
+mcp[cli]
+langchain-openai
