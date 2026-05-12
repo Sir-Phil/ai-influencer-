@@ -4,40 +4,52 @@ from app.core.config import settings
 
 class FactCheckCrew:
     def __init__(self):
-        # Initialize the search tool
-        self.search_tool = SerperDevTool()
+        # Initialize Serper - it reads settings.SERPER_API_KEY automatically
+        self.search_tool = SerperDevTool(
+            n_results=5,
+            location="Nigeria", # Helps prioritize local context
+            save_file=False
+        )
         
-        # Using the same OpenRouter LLM setup
         self.llm = LLM(
-            model="openrouter/meta-llama/llama-3.1-70b-instruct",
+            model="openai/gpt-5.5",
             api_key=settings.OPENROUTER_API_KEY,
             base_url=settings.base_url
         )
 
+        # self.llm = LLM(
+        #     model="openai/gpt-5.5", 
+        #     temperature=0.7,
+        #     api_key=settings.OPENAI_API_KEY
+        # )
+
     def verify_claim(self, claim: str):
-        # 1. The Fact-Checker Agent
+        # The Skeptical Researcher
         checker = Agent(
-            role="Lead Fact-Checker",
-            goal=f"Verify the accuracy of the claim: {claim}",
-            backstory="""You are an expert analyst at a top Nigerian fact-checking organization. 
-            You are skeptical, thorough, and look for primary sources like official government 
-            statements, reputable news outlets (Premium Times, Punch, etc.), and verified data.""",
+            role="Nigerian Media Fact-Checker",
+            goal=f"Determine if the claim '{claim}' is True, False, or Misleading based on live news.",
+            backstory="""You are a veteran journalist in Lagos. You know which sources are 
+            reliable and which are propaganda. You never take a single tweet as proof.""",
             tools=[self.search_tool],
             llm=self.llm,
             verbose=True
         )
 
-        # 2. The Verification Task
         check_task = Task(
-            description=f"""Search for the latest information regarding: '{claim}'.
-            Compare multiple sources. Identify if the claim is 'True', 'False', or 'Misleading'.
-            Provide a brief explanation and the links used for verification.""",
-            expected_output="""A JSON object containing:
-            - verdict: (True/False/Misleading)
-            - summary: (A 2-sentence explanation)
-            - sources: (List of URLs)""",
+            description=f"""Search the live web for: '{claim}'. 
+            Compare reports from at least 3 distinct Nigerian news outlets. 
+            Check for official government gazettes if applicable.""",
+            # We enforce JSON output so the backend can easily parse it for the DB
+            expected_output="""A JSON object: {
+                "verdict": "True" | "False" | "Misleading",
+                "summary": "2-sentence explanation",
+                "sources": ["url1", "url2"]
+            }""",
             agent=checker
         )
 
         crew = Crew(agents=[checker], tasks=[check_task])
-        return crew.kickoff()
+        result = crew.kickoff()
+        
+        # CrewAI returns a CrewOutput object; we extract the raw JSON string
+        return result.raw
