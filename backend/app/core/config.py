@@ -1,24 +1,32 @@
 import os
-
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from typing import Optional
 
 class Settings(BaseSettings):
-    # 1. Added ': str' and removed the trailing comma
-    # This must be a string, not a tuple
+    # 1. Provide a default for the Base URL
     base_url: str = "https://openrouter.ai/api/v1"
     
-    OPENROUTER_API_KEY: str = os.getenv("OPENROUTER_API_KEY")
-    PERPLEXITY_API_KEY: str
+    # 2. Provide defaults for all API keys to prevent crashes during development
+    OPENROUTER_API_KEY: str = os.getenv("OPENROUTER_API_KEY", "")
+    
+    # This was the likely crash point. Added a default empty string.
+    PERPLEXITY_API_KEY: str = os.getenv("PERPLEXITY_API_KEY", "")
+    
+    # Added default for Serper as well
+    SERPER_API_KEY: str = os.getenv("SERPER_API_KEY", "")
+
     DATABASE_URL: str = "sqlite+aiosqlite:///./ai_influencer.db"
     
     # Persona Constants
     INFLUENCER_NAME: str = "Amaka AI"
     INFLUENCER_BIO: str = "A savvy, Pan-Nigerian digital advocate focusing on youth political inclusion."
     
-    # Tells Pydantic to look for these values in your .env file
-    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
-    # 2. Added SERPER_API_KEY to the settings class
-    SERPER_API_KEY: str = os.getenv("SERPER_API_KEY")
+    model_config = SettingsConfigDict(
+        env_file=".env", 
+        extra="ignore",
+        env_file_encoding='utf-8'
+    )
 
+# Instantiate
 settings = Settings()
