@@ -44,12 +44,22 @@ export async function updateDraft(jobId: string, content: string) {
 /**
  * Push the final approved content to X and Instagram
  */
-export async function publishDraft(jobId: string) {
+export async function publishDraft(jobId: string, selectedContent: string) {
   const res = await fetch(`${BASE_URL}/drafts/${jobId}/publish`, {
     method: "POST",
+    headers: { 
+      "Content-Type": "application/json" 
+    },
+    // This body is what satisfies the 422 validation
+    body: JSON.stringify({ 
+      selected_content: selectedContent 
+    }),
   });
 
-  if (!res.ok) throw new Error("Failed to publish to social media");
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(errorData.detail || "Failed to publish");
+  }
   return res.json();
 }
 
