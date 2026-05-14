@@ -10,9 +10,9 @@
 The system drives the persona of "Amaka"—a savvy, Pan-Nigerian digital advocate focusing on youth political inclusion. It completely automates the lifecycle of breaking news aggregation, multi-tier fact-checking, creative asset generation (multimedia card attachments), and human-verified global publishing.
 
 ### 🌐 Live Production Links
-* **Production Command Center (Frontend):** [https://ai-influencer-frontend.vercel.app](https://ai-influencer-frontend.vercel.app) *(Replace with your exact Vercel Custom/Project URL)*
+* **Production Command Center (Frontend):** [https://ai-influencer-livid.vercel.app/](https://ai-influencer-livid.vercel.app/) *(Replace with your exact Vercel Custom/Project URL)*
 * **Production Orchestration Engine (Backend):** [https://ai-influencer-production-cb07.up.railway.app](https://ai-influencer-production-cb07.up.railway.app)
-* **Interactive API Blueprint (Swagger UI):** [https://ai-influencer-production-cb07.up.railway.app/docs](https://ai-influencer-production-cb07.up.railway.app/docs)
+* **Interactive API Blueprint (Swagger UI):** [https://ai-influencer-production-cb07.up.railway.app/docs#/](https://ai-influencer-production-cb07.up.railway.app/docs#/)
 
 ---
 
