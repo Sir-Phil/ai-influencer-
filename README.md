@@ -11,11 +11,9 @@ The system drives the persona of "Amaka"—a savvy, Pan-Nigerian digital advocat
 
 ### 🌐 Live Production Links
 
-* **Production Command Center (Frontend):** https://ai-influencer-livid.vercel.app/
-
-* **Production Orchestration Engine (Backend):** https://ai-influencer-production-cb07.up.railway.app
-
-* **Interactive API Blueprint (Swagger UI):** https://ai-influencer-production-cb07.up.railway.app/docs
+* **Production Command Center (Frontend):** <a href="https://ai-influencer-livid.vercel.app" target="_blank">https://ai-influencer-livid.vercel.app</a>
+* **Production Orchestration Engine (Backend):** <a href="https://ai-influencer-production-cb07.up.railway.app" target="_blank">https://ai-influencer-production-cb07.up.railway.app</a>
+* **Interactive API Blueprint (Swagger UI):** <a href="https://ai-influencer-production-cb07.up.railway.app/docs" target="_blank">https://ai-influencer-production-cb07.up.railway.app/docs</a>
 ---
 
 ## 🌍 Content Verticals & Global Reach
