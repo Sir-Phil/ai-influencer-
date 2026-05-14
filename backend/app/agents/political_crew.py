@@ -1,58 +1,48 @@
-# 1. Change your imports to include the LLM class from crewai
 from crewai import Agent, Task, Crew, Process, LLM 
 from app.core.config import settings
 
 class PoliticalInfluencerCrew:
     def __init__(self):
-        # 2. Use the CrewAI LLM wrapper instead of ChatOpenAI
         self.agent_llm = LLM(
-            model="openai/meta-llama/llama-3.1-70b-instruct", # prefix with 'openai/' for openrouter
-            base_url=settings.base_url,
+            model="openai/gpt-4o", 
             api_key=settings.OPENROUTER_API_KEY,
-            temperature=0.7
+            base_url=settings.base_url,
+            temperature=0.8
         )
 
     def _create_agents(self):
         researcher = Agent(
             role="Political Researcher",
-            goal="Identify the latest updates regarding {topic} in Nigeria.",
+            goal="Identify facts regarding {topic} in Nigeria, specifically Rivers State.",
             backstory="Investigative journalist specializing in Nigerian social-political dynamics.",
-            llm=self.agent_llm, # Pass the new wrapper here
-            verbose=True,
-            allow_delegation=False
+            llm=self.agent_llm,
+            verbose=True
         )
 
         influencer = Agent(
             role="Digital Content Strategist",
-            goal=f"Draft a compelling social media post in the voice of {settings.INFLUENCER_NAME}.",
-            backstory=f"{settings.INFLUENCER_BIO}. You are known for bridging the gap between street vibes and policy.",
-            llm=self.agent_llm, # Pass the new wrapper here
+            goal=f"Draft three distinct post options for {settings.INFLUENCER_NAME}.",
+            backstory=f"{settings.INFLUENCER_BIO}. Expert in policy, street vibes, and digital activism.",
+            llm=self.agent_llm,
             verbose=True
         )
-
         return researcher, influencer
 
     def run(self, topic: str):
         researcher, influencer = self._create_agents()
         
         t1 = Task(
-            description=f"Summarize the recent controversy or news involving {topic}.", 
+            description=f"Summarize the recent facts involving {topic}.", 
             expected_output="A concise summary of the key facts.",
             agent=researcher
         )
         
         t2 = Task(
-            description="Write a viral thread for X (Twitter) based on the research. Mix English and Pidgin.", 
-            expected_output="A 3-part Twitter thread.",
+            description="Create 3 distinct post options: 1. The Advocate (Formal), 2. The PH Local (Pidgin/Slang), 3. The Firebrand (Punchy).", 
+            expected_output="""A JSON object ONLY. No markdown blocks. 
+            Structure: {"options": [{"type": "The Advocate", "content": "..."}, {"type": "The PH Local", "content": "..."}, {"type": "The Firebrand", "content": "..."}]}""",
             agent=influencer
         )
 
-        crew = Crew(
-            agents=[researcher, influencer],
-            tasks=[t1, t2],
-            process=Process.sequential
-        )
-        
-        # Convert the CrewOutput object to string for the DB
-        result = crew.kickoff()
-        return str(result)
+        crew = Crew(agents=[researcher, influencer], tasks=[t1, t2], process=Process.sequential)
+        return str(crew.kickoff())
