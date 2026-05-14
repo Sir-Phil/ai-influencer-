@@ -1,19 +1,37 @@
-This README is designed for your specific dual-stack setup: **FastAPI (Python/uv)** for the AI heavy lifting and **Next.js (TypeScript/npm)** for the command center.
+Here is your updated `README.md` with the live production URLs integrated directly into the introduction, setup, and architecture notes so your project documentation points exactly to your active deployments.
 
 ---
 
-# Amaka AI: Political Mission Control 🇳🇬
+```markdown
+# Amaka AI: Multi-Agent Digital Advocacy & Content Studio 🇳🇬📡
 
-**Amaka AI** is a production-ready, Human-in-the-Loop AI Influencer platform. It leverages **CrewAI** and **Perplexity** to research Nigerian political developments in real-time and drafts high-impact social media content.
+**Amaka AI** is a production-ready, stateful **Multi-Agent System** and **MCP-Driven Business Automation pipeline** designed to operate as a digital advocacy, trend-scouting, and multimedia content creation studio. 
 
-The system is designed for "Amaka," a digital persona that translates complex policy (like the 2026 Digital Economy Bill) into digestible advocacy for Nigerian tech startups and citizens.
+The system drives the persona of "Amaka"—a savvy, Pan-Nigerian digital advocate focusing on youth political inclusion. It completely automates the lifecycle of breaking news aggregation, multi-tier fact-checking, creative asset generation (multimedia card attachments), and human-verified global publishing.
 
-## 🚀 Architecture
+### 🌐 Live Production Links
+* **Production Command Center (Frontend):** [https://ai-influencer-frontend.vercel.app](https://ai-influencer-frontend.vercel.app) *(Replace with your exact Vercel Custom/Project URL)*
+* **Production Orchestration Engine (Backend):** [https://ai-influencer-production-cb07.up.railway.app](https://ai-influencer-production-cb07.up.railway.app)
+* **Interactive API Blueprint (Swagger UI):** [https://ai-influencer-production-cb07.up.railway.app/docs](https://ai-influencer-production-cb07.up.railway.app/docs)
 
--   **Backend**: FastAPI, CrewAI (Multi-agent orchestration), PydanticAI, and SQLAlchemy.
--   **Frontend**: Next.js 16, Tailwind CSS v4, Shadcn/UI, and Sonner.
--   **Intelligence**: Perplexity Sonar (Real-time web search) & OpenAI GPT-4o.
--   **Env Management**: `uv` (Python) and `npm` (Node.js).
+---
+
+## 🌍 Content Verticals & Global Reach
+
+Amaka AI actively scans and contextualizes high-velocity global trends across three core pillars, weaving them into civic messaging with international resonance:
+- **Political Accountability & Youth Inclusion:** Translating complex legislative frameworks (like the 2026 Digital Economy Bill) into digestible advocacy for tech startups and citizens.
+- **Entertainment & Pop Culture Kinetics:** Monitoring music releases, cinematic trends, and cultural shifts to blend pop culture elements with civic empowerment.
+- **The Football World Cup & Global Sports:** Capitalizing on the unifying footprint of major sports to build community-driven conversations around national pride, team leadership, and youth potential.
+
+---
+
+## 🚀 Architecture & Tech Stack
+
+- **Frontend (Command Center):** Next.js 16 (TypeScript), Tailwind CSS v4, Shadcn/UI, and Sonner notifications. Hosted on **Vercel**.
+- **Backend (Orchestration Engine):** FastAPI (Python), Uvicorn ASGI server, and SQLite/AIOSQLite (`ai_influencer.db`). Hosted on **Railway** with automatic SSL/HTTPS.
+- **Agentic Infrastructure:** **CrewAI** (Multi-agent orchestration), **Model Context Protocol (MCP)** for secure tool abstraction, and **Pydantic / Pydantic-Settings** for strict schema validation.
+- **Intelligence & Assets:** OpenRouter / Perplexity Sonar (Real-time web search), OpenAI GPT-4o, and **Pillow (PIL)** for programmatic social card generation.
+- **Package Management:** `uv` (Python) and `npm` (Node.js).
 
 ---
 
@@ -21,19 +39,21 @@ The system is designed for "Amaka," a digital persona that translates complex po
 
 ```text
 ai-influencer/
-├── backend/                # FastAPI Application
+├── backend/                # FastAPI Application (Root Dir on Railway: /backend)
 │   ├── app/
-│   │   ├── agents/         # CrewAI Agent definitions
-│   │   ├── db/             # SQLite/PostgreSQL models & migrations
-│   │   └── main.py         # FastAPI entry point (Lifespan handlers)
-│   ├── .venv/              # Isolated python environment (uv)
-│   └── pyproject.toml      # Dependency management
-├── frontend/               # Next.js Dashboard
-│   ├── app/                # App Router (Pages & Layouts)
-│   ├── components/ui/      # Shadcn atomic components
-│   ├── lib/api.ts          # Typed backend communication
-│   └── tailwind.config.ts  # Tailwind CSS v4 configuration
-└── .vscode/                # Workspace settings for Pylance/TS
+│   │   ├── agents/         # CrewAI Agent definitions (Fact-Check Crew, Content Director)
+│   │   ├── core/
+│   │   │   └── config.py   # Pydantic Settings & environment shielding (extra="ignore")
+│   │   ├── db/             # Async SQLite models & migrations (ai_influencer.db)
+│   │   └── main.py         # Versioned REST API entry point (/api/v1) with CORS configurations
+│   ├── pyproject.toml      # Dependency management via uv
+│   └── requirements.txt    # Generated build file for cloud environment
+└── frontend/               # Next.js Dashboard (Root Dir on Vercel: /frontend)
+    ├── app/                # App Router with dynamic polling interfaces
+    ├── components/ui/      # Shadcn atomic components
+    ├── lib/api.ts          # Typed backend communication via NEXT_PUBLIC_API_URL
+    └── tailwind.config.ts  # Tailwind CSS v4 configuration
+
 ```
 
 ---
@@ -41,7 +61,8 @@ ai-influencer/
 ## ⚙️ Setup & Installation
 
 ### 1. Backend (Python 3.12+)
-Navigate to the backend folder and use `uv` for lightning-fast setup.
+
+Navigate to the backend folder and use `uv` for setup.
 
 ```bash
 cd backend
@@ -49,53 +70,62 @@ cd backend
 uv sync
 
 # Set up environment variables (.env)
-echo "OPENAI_API_KEY=your_key" >> .env
+echo "OPENROUTER_API_KEY=your_key" >> .env
 echo "PERPLEXITY_API_KEY=your_key" >> .env
-echo "DATABASE_URL=sqlite+aiosqlite:///./amaka.db" >> .env
+echo "SERPER_API_KEY=your_key" >> .env
+echo "DATABASE_URL=sqlite+aiosqlite:///./ai_influencer.db" >> .env
 
-# Start the server
-uv run uvicorn app.main:app --reload
+# Start the server locally
+uv run uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
 ```
 
+*For cloud deployment on Railway, ensure `PORT=8000` is defined in service variables and the Start Command uses: `python -m uvicorn app.main:app --host 0.0.0.0 --port ${PORT}`.*
+
 ### 2. Frontend (Node.js 20+)
-Navigate to the frontend folder and install dependencies.
+
+Navigate to the frontend folder and configure environment connections.
 
 ```bash
 cd frontend
 npm install
 
+# Configure Vercel/Local Environment Variables targeting production gateway
+echo "NEXT_PUBLIC_API_URL=[https://ai-influencer-production-cb07.up.railway.app/api/v1](https://ai-influencer-production-cb07.up.railway.app/api/v1)" >> .env.local
+
 # Start the development server
 npm run dev
+
 ```
 
 ---
 
-## 🚦 Key Workflows
+## 🚦 Key Asynchronous Workflows (With Attachments)
 
-### AI Content Generation
-1.  **Trigger**: User submits a topic (e.g., "Minimum Wage impact in Lagos") via the dashboard.
-2.  **Research**: CrewAI initializes a "Political Researcher" agent using the **Perplexity Sonar** model to crawl live news.
-3.  **Drafting**: A "Copywriter" agent transforms the research into Amaka's unique voice.
-4.  **Review**: The backend saves the draft with a `review_required` status.
-5.  **Approval**: The user edits and approves the post, which can then be dispatched to social APIs.
+### Content Lifecycle & State Management
 
----
-
-## 🛡 Features
-
--   **Lifespan Events**: Backend uses modern FastAPI `lifespan` for clean DB connection management.
--   **Agentic Search**: Unlike standard LLMs, this project uses Perplexity to ensure facts are grounded in 2026 reality.
--   **Sonner Notifications**: Real-time "toast" feedback for long-running AI background tasks.
--   **Type Safety**: End-to-end TypeScript interfaces and Pydantic models.
+1. **Trigger (`/api/v1/generate`)**: The operator submits a trend topic (e.g., *"World Cup match fixture"* or *"Political Accountability bill"*). FastAPI registers the task and instantly returns a unique `job_id`, allowing the UI to remain responsive.
+2. **Scouting & Verification (CrewAI & MCP)**: The *Trend & Context Agent* utilizes MCP search engines (Serper/DuckDuckGo) to crawl real-time data streams. The *Fact-Check Crew* uses Pydantic validation to scrub out misinformation.
+3. **Draft Compilation & Image Generation (Pillow)**: The *Content Director* synthesizes the text copy. Simultaneously, **Pillow (PIL)** programmatically generates corresponding multimedia graphic attachments (e.g., social media quote/data cards) using layout templates.
+4. **State Polling (`/api/v1/drafts/{job_id}`)**: The Next.js dashboard continuously polls the database status. Once complete, it displays the structured text draft along with its **generated image attachments** directly in the UI queue.
+5. **Human-In-The-Loop Approval (`/api/v1/drafts/{job_id}/publish`)**: The post remains held safely in draft state. The operator reviews the text copy, inspects the attached graphic cards, edits if necessary, and triggers final publication to global media distribution channels.
 
 ---
 
-## 📝 Future Roadmap
--   [ ] **Twitter/X Integration**: Direct posting after approval.
--   [ ] **Sentiment Analysis**: Dashboard showing real-time feedback on Amaka's posts.
--   [ ] **Image Generation**: Integrating DALL-E 3 for auto-generating post graphics.
+## 🛡 Production & Deployment Features
+
+* **Platform Environment Shielding:** Built using `SettingsConfigDict(extra="ignore")`, protecting the application from crashing due to internal runtime variables injected by cloud infrastructure platforms like Railway.
+* **Asynchronous Data Layer:** Leverages `aiosqlite` for fully non-blocking database queries, ensuring agent memory writes and job status changes don't clog up incoming frontend requests.
+* **Automatic Blueprint Documentation:** Out-of-the-box API routing blueprints accessible at your deployed endpoint via `/docs` or `/redoc` for immediate contract checking between Vercel and Railway layers.
+* **Secure Cross-Origin Resource Sharing (CORS):** Fully mapped CORS configurations ensuring secure, authenticated browser handshake protocols between Next.js server-side layers and the remote FastAPI instance.
 
 ---
 
-**Developer**: Philip Onuchukwu  
+**Developer**: Philip Onuchukwu
+
 **Stack**: Backend Engineer | AI Agent Specialist
+
+```
+🤖
+
+```
