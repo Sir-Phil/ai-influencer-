@@ -1,7 +1,4 @@
 
-
----
-
 ```markdown
 # Amaka AI: Multi-Agent Digital Advocacy & Content Studio 🇳🇬📡
 
